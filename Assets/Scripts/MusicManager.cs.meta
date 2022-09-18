@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 052e18018e008244e83fef2c9954ad61
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - audioSource: {instanceID: 0}
+  - ball: {fileID: 8696825209751961858, guid: 6b507a29f2217fd4b82c1f5d43c967f9, type: 3}
+  - up: {instanceID: 0}
+  - forward: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
