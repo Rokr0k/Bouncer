@@ -30,7 +30,7 @@ namespace Bouncer
                         index++;
                     }
 
-                    float x = Mathf.LerpUnclamped(-6, 8, musicManager.AudioFraction - musicManager.measures[measure].offset);
+                    float x = Mathf.LerpUnclamped(-8, 8, musicManager.AudioFraction - musicManager.measures[measure].offset);
                     float r1, r2;
                     if (musicManager.measures[measure].notes.Count > 0)
                     {

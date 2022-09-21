@@ -35,7 +35,7 @@ namespace Bouncer
                         if (!pool[j].activeSelf)
                         {
                             pool[j].SetActive(true);
-                            pool[j].transform.localPosition = Vector3.right * Mathf.LerpUnclamped(-6, 8, notes[i].fraction);
+                            pool[j].transform.localPosition = Vector3.right * Mathf.LerpUnclamped(-8, 8, notes[i].fraction);
                             break;
                         }
                     }

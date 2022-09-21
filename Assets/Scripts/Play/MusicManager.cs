@@ -85,6 +85,8 @@ namespace Bouncer
 
             public PreviewManager up, forward;
 
+            public CameraController cam;
+
             private bool first;
 
             public bool isPlaying;
@@ -104,6 +106,8 @@ namespace Bouncer
                     b.gameObject.SetActive(false);
                     balls.Add(b);
                 }
+                cam.x1 = -8;
+                cam.x2 = 8;
             }
 
             private void Update()
@@ -122,17 +126,22 @@ namespace Bouncer
                     }
                     up.Clear();
                     forward.Clear();
+                    float x1 = -8, x2 = 8;
                     for (int i = 0; i < measures.Count; i++)
                     {
                         if (measures[i].offset < AudioFraction && AudioFraction < measures[i].offset + measures[i].signature)
                         {
                             up.Display(measures[i].notes);
+                            x2 = Mathf.Max(Mathf.LerpUnclamped(-8, 8, measures[i].signature), x2);
                         }
                         else if (i > 0 && measures[i - 1].offset < AudioFraction && AudioFraction < measures[i - 1].offset + measures[i - 1].signature || i == 0 && measures[i].offset - measures[i].signature < AudioFraction && AudioFraction < measures[i].offset)
                         {
                             forward.Display(measures[i].notes);
+                            x2 = Mathf.Max(Mathf.LerpUnclamped(-8, 8, measures[i].signature), x2);
                         }
                     }
+                    cam.x1 = x1;
+                    cam.x2 = x2;
                     foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
                     {
                         if (Input.GetKeyDown(key))
