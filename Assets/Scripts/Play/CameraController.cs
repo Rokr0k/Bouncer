@@ -12,9 +12,7 @@ namespace Bouncer
 
             void Update()
             {
-                Vector3 origin = Vector3.back * (x2 - x1) * 0.625f;
-                Vector3 target = Vector3.right * (x1 + x2) / 2;
-                transform.position = Vector3.Lerp(transform.position, origin + target, Time.deltaTime * 2f);
+                transform.position = Vector3.Lerp(transform.position, new Vector3((x1 + x2) / 2, (x2 - x1) * 0.3125f - 5, (x1 - x2) * 0.625f), Time.deltaTime * 2f);
             }
         }
     }

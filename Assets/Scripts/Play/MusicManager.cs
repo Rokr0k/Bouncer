@@ -85,6 +85,8 @@ namespace Bouncer
 
             public PreviewManager up, forward;
 
+            public static readonly float[] judge = { 0.03f, 0.07f, 0.1f };
+
             public CameraController cam;
 
             private bool first;
@@ -99,7 +101,7 @@ namespace Bouncer
 
             private void Start()
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     BallController b = Instantiate(ball).GetComponent<BallController>();
                     b.musicManager = this;
@@ -126,22 +128,22 @@ namespace Bouncer
                     }
                     up.Clear();
                     forward.Clear();
-                    float x1 = -8, x2 = 8;
+                    float x = -1;
                     for (int i = 0; i < measures.Count; i++)
                     {
                         if (measures[i].offset < AudioFraction && AudioFraction < measures[i].offset + measures[i].signature)
                         {
                             up.Display(measures[i].notes);
-                            x2 = Mathf.Max(Mathf.LerpUnclamped(-8, 8, measures[i].signature), x2);
+                            x = Mathf.Max(measures[i].signature, x);
                         }
                         else if (i > 0 && measures[i - 1].offset < AudioFraction && AudioFraction < measures[i - 1].offset + measures[i - 1].signature || i == 0 && measures[i].offset - measures[i].signature < AudioFraction && AudioFraction < measures[i].offset)
                         {
                             forward.Display(measures[i].notes);
-                            x2 = Mathf.Max(Mathf.LerpUnclamped(-8, 8, measures[i].signature), x2);
+                            x = Mathf.Max(measures[i].signature, x);
                         }
                     }
-                    cam.x1 = x1;
-                    cam.x2 = x2;
+                    cam.x1 = -8;
+                    cam.x2 = x < 0 ? 8 : x * 16 - 8;
                     foreach (KeyCode key in System.Enum.GetValues(typeof(KeyCode)))
                     {
                         if (Input.GetKeyDown(key))
@@ -190,14 +192,14 @@ namespace Bouncer
 
             public void Press()
             {
-                int ni = 0, nj = 0;
+                int ni = -1, nj = 0;
                 for (int i = 0; i < balls.Count; i++)
                 {
                     if (balls[i].gameObject.activeSelf)
                     {
                         for (int j = 0; j < measures[balls[i].measure].notes.Count; j++)
                         {
-                            if (Mathf.Abs(measures[balls[i].measure].notes[j].time - AudioTime) < Mathf.Abs(measures[balls[ni].measure].notes[nj].time - AudioTime))
+                            if (!balls[i].executed[j] && (ni < 0 || measures[balls[i].measure].notes[j].time < measures[balls[ni].measure].notes[nj].time))
                             {
                                 ni = i;
                                 nj = j;
@@ -205,19 +207,19 @@ namespace Bouncer
                         }
                     }
                 }
-                if (!balls[ni].executed[nj])
+                if (ni>=0)
                 {
                     balls[ni].executed[nj] = true;
                     float diff = Mathf.Abs(measures[balls[ni].measure].notes[nj].time - AudioTime);
-                    if (diff < 0.03f)
+                    if (diff < judge[0])
                     {
                         balls[ni].PlayEffect(measures[balls[ni].measure].notes[nj].impact, BallController.Effect.Best);
                     }
-                    else if (diff < 0.07f)
+                    else if (diff < judge[1])
                     {
                         balls[ni].PlayEffect(measures[balls[ni].measure].notes[nj].impact, BallController.Effect.Good);
                     }
-                    else if (diff < 0.1f)
+                    else if (diff < judge[2])
                     {
                         balls[ni].PlayEffect(measures[balls[ni].measure].notes[nj].impact, BallController.Effect.Poor);
                     }

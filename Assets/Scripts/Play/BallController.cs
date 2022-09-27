@@ -25,6 +25,15 @@ namespace Bouncer
             {
                 if (musicManager.isPlaying)
                 {
+                    for (int i = 0; i < musicManager.measures[measure].notes.Count; i++)
+                    {
+                        if (!executed[i] && musicManager.AudioTime - musicManager.measures[measure].notes[i].time > MusicManager.judge[2])
+                        {
+                            executed[i] = true;
+                            PlayEffect(musicManager.measures[measure].notes[i].impact, Effect.Poor);
+                        }
+                    }
+
                     while (index + 1 < musicManager.measures[measure].notes.Count && musicManager.measures[measure].notes[index + 1].fraction < musicManager.AudioFraction - musicManager.measures[measure].offset)
                     {
                         index++;

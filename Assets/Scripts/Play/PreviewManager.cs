@@ -18,7 +18,7 @@ namespace Bouncer
 
             private void Start()
             {
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < 50; i++)
                 {
                     GameObject aa = Instantiate(note, transform);
                     aa.SetActive(false);
@@ -30,14 +30,22 @@ namespace Bouncer
             {
                 for (int i = 0; i < notes.Count; i++)
                 {
+                    bool newFlag = true;
                     for (int j = 0; j < pool.Count; j++)
                     {
                         if (!pool[j].activeSelf)
                         {
                             pool[j].SetActive(true);
                             pool[j].transform.localPosition = Vector3.right * Mathf.LerpUnclamped(-8, 8, notes[i].fraction);
+                            newFlag = false;
                             break;
                         }
+                    }
+                    if (newFlag)
+                    {
+                        GameObject aa = Instantiate(note, transform);
+                        aa.transform.localPosition = Vector3.right * Mathf.LerpUnclamped(-8, 8, notes[i].fraction);
+                        pool.Add(aa);
                     }
                 }
             }

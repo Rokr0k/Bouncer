@@ -33,12 +33,12 @@ namespace Bouncer
                 }
             }
 
-            private Regex songPath = new Regex(@"^#AUDIO (.*)$");
-            private Regex bpmPath = new Regex(@"^#BPM (\d+(\.\d+)?)$");
-            private Regex offsetPath = new Regex(@"^#OFFSET (\d+(\.\d+)?)$");
-            private Regex bpmTransPath = new Regex(@"^#BPMTRANS (\d+(\.\d+)?) (\d+(\.\d+)?)$");
-            private Regex signaturePath = new Regex(@"^#SIGNATURE (\d+) (\d+(\.\d+)?)$");
-            private Regex notesPath = new Regex(@"^#(\d+):([\.\*#]+)$");
+            private Regex songPath = new Regex(@"^\s*#AUDIO\s+(.*)\s*$");
+            private Regex bpmPath = new Regex(@"^\s*#BPM\s+(\d+(\.\d+)?)\s*$");
+            private Regex offsetPath = new Regex(@"^\s*#OFFSET\s+(\d+(\.\d+)?)\s*$");
+            private Regex bpmTransPath = new Regex(@"^\s*#BPMTRANS\s+(\d+(\.\d+)?)\s+(\d+(\.\d+)?)\s*$");
+            private Regex signaturePath = new Regex(@"^\s*#SIGNATURE\s+(\d+)\s+(\d+(\.\d+)?)\s*$");
+            private Regex notesPath = new Regex(@"^\s*#(\d+):([\.\*#]+)\s*$");
 
             private bool done;
             private bool success;
