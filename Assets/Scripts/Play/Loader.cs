@@ -15,6 +15,8 @@ namespace Bouncer
         {
             public MusicManager musicManager;
             public Button load, play;
+            public TMPro.TMP_Text fileText;
+            public TMPro.TMP_Text titleText;
 
             public void Load()
             {
@@ -25,6 +27,7 @@ namespace Bouncer
                 if (files.Length > 0)
                 {
                     Parse(files[0]);
+                    fileText.text = Path.GetFileName(files[0]);
                 }
                 else
                 {
@@ -33,7 +36,9 @@ namespace Bouncer
                 }
             }
 
-            private Regex songPath = new Regex(@"^\s*#AUDIO\s+(.*)\s*$");
+            private Regex titlePath = new Regex(@"^\s*#TITLE\s+(.*)\s*$");
+            private Regex artistPath = new Regex(@"^\s*#ARTIST\s+(.*)\s*$");
+            private Regex audioPath = new Regex(@"^\s*#AUDIO\s+(.*)\s*$");
             private Regex bpmPath = new Regex(@"^\s*#BPM\s+(\d+(\.\d+)?)\s*$");
             private Regex offsetPath = new Regex(@"^\s*#OFFSET\s+(\d+(\.\d+)?)\s*$");
             private Regex bpmTransPath = new Regex(@"^\s*#BPMTRANS\s+(\d+(\.\d+)?)\s+(\d+(\.\d+)?)\s*$");
@@ -57,10 +62,19 @@ namespace Bouncer
                 {
                     signatures[i] = 1;
                 }
+                string titleStr = "Untitled", artistStr = "Unknown";
                 foreach (string line in lines)
                 {
                     Match match;
-                    if ((match = songPath.Match(line)).Success)
+                    if ((match = titlePath.Match(line)).Success)
+                    {
+                        titleStr = match.Groups[1].Value;
+                    }
+                    else if ((match = artistPath.Match(line)).Success)
+                    {
+                        artistStr = match.Groups[1].Value;
+                    }
+                    else if ((match = audioPath.Match(line)).Success)
                     {
                         StartCoroutine(LoadAudio(Path.Combine(Directory.GetParent(file).FullName, match.Groups[1].Value)));
                     }
@@ -130,6 +144,7 @@ namespace Bouncer
                         musicManager.measures[i].notes[j] = new MusicManager.Note(core.time + (musicManager.measures[i].offset + musicManager.measures[i].notes[j].fraction - core.fraction) * 240 / core.bpm, musicManager.measures[i].notes[j].fraction, musicManager.measures[i].notes[j].impact);
                     }
                 }
+                titleText.text = artistStr + " - " + titleStr;
                 StartCoroutine(WaitUntilSuccess());
             }
 
@@ -159,6 +174,11 @@ namespace Bouncer
                 }
                 load.interactable = true;
                 play.interactable = success;
+                if(!success)
+                {
+                    titleText.text = "Not loaded";
+                    fileText.text = "none";
+                }
                 musicManager.Initialize();
             }
         }
